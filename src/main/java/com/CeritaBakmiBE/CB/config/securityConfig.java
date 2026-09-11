@@ -17,9 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class securityConfig {
 
     private final UserRepository userRepository;
+    private final securityJwtFilter securityJwtFilter;
 
-    public securityConfig(UserRepository userRepository) {
+    public securityConfig(UserRepository userRepository, securityJwtFilter securityJwtFilter) {
         this.userRepository = userRepository;
+        this.securityJwtFilter = securityJwtFilter;
     }
 
     @Bean

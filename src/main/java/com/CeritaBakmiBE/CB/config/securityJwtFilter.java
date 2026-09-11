@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class securityJwtFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
-    public securityJwtFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    public securityJwtFilter(JwtService jwtService,@Lazy UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
