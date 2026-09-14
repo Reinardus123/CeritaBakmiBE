@@ -3,12 +3,13 @@ package com.CeritaBakmiBE.CB.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Table(name = "menu")
-@AllArgsConstructor
-@Getter
+@NoArgsConstructor
 @Setter
+@Getter
 @Entity
 public class Menu {
 
@@ -27,6 +28,8 @@ public class Menu {
     private int price;
 
     private String imageUrl;
+
+    private boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryID", nullable = false)
