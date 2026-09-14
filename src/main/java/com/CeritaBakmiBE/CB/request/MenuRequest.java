@@ -22,12 +22,13 @@ public class MenuRequest {
     @Size(min = 3, max = 30, message = "deskripsi menu minimal 3 karakter")
     private String description;
 
-    @NotEmpty(message = "harga menu harus di isi")
+    @NotNull(message = "harga menu harus di isi")
     @Min(1)
     private int price;
 
     @NotNull(message = "Category harus dipilih")
     private Long categoryId;
 
-    private MultipartFile imagUrl;
+    private MultipartFile image;
+
 }
