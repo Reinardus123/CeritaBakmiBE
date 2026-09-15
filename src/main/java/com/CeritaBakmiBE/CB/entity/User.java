@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @Column(name = "update_at")
     private Date updateAt;
 
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

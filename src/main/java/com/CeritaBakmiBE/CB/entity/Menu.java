@@ -1,10 +1,11 @@
 package com.CeritaBakmiBE.CB.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Table(name = "menu")
 @NoArgsConstructor
@@ -34,6 +35,9 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryID", nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "menu")
+    private List<CartItem> cartItem;
 
 
 
