@@ -11,5 +11,5 @@ public interface CartService {
     CartResponse addCart(CartRequest cartRequest) throws IOException;
     void removeFromCart(long id);
     List<CartResponse>getAllCart();
-    void updateQuantity(long id, int quantity);
+
 }
