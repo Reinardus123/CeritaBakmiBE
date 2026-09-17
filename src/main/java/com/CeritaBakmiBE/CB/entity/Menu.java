@@ -39,6 +39,9 @@ public class Menu {
     @OneToMany(mappedBy = "menu")
     private List<CartItem> cartItem;
 
+    @OneToMany(mappedBy = "menu")
+    private List<TransactionDetail> transactionDetails;
+
 
 
 }

@@ -55,6 +55,10 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private Cart cart;
 
+    @OneToMany(mappedBy = "user")
+    private List<Transaction> transaction;
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
