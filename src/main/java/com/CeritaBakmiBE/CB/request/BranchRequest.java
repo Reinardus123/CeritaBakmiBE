@@ -17,6 +17,9 @@ public class BranchRequest {
     @NotNull(message = "Alamat cabang tidak boleh kosong")
     private String Address;
 
+    @NotNull(message = "No telepon tidak boleh kosong")
+    private String phoneNumber;
+
 
 
 }

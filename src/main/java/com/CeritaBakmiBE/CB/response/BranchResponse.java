@@ -14,5 +14,6 @@ public class BranchResponse {
     private long branchId;
     private String branchName;
     private String address;
+    private String phoneNumber;
     private boolean isActive;
 }

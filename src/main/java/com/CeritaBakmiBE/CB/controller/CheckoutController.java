@@ -8,10 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -27,4 +26,12 @@ public class CheckoutController {
     public CheckoutResponse checkout(@Valid CheckoutRequest checkoutRequest){
         return checkoutService.checkout(checkoutRequest);
     }
+
+    @Operation(summary = "Get All Menu By User", description = "get All Menu")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/getAll")
+    public List<CheckoutResponse> getCheckoutByUser() throws Exception{
+        return checkoutService.getTransactionByUser();
+    }
+
 }

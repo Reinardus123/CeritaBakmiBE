@@ -58,6 +58,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Transaction> transaction;
 
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
+
 
 
     @Override

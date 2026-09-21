@@ -6,11 +6,16 @@ import com.CeritaBakmiBE.CB.entity.*;
 import com.CeritaBakmiBE.CB.repository.*;
 import com.CeritaBakmiBE.CB.request.CheckoutRequest;
 import com.CeritaBakmiBE.CB.response.CheckoutResponse;
+import com.CeritaBakmiBE.CB.response.TransactionDetailResponse;
 import com.CeritaBakmiBE.CB.service.CheckoutService;
 import com.CeritaBakmiBE.CB.util.FindAuthenticationUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +40,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         Cart cart;
         Branch branch;
         List<CartItem> cartItems;
+        List<TransactionDetailResponse> responses = new ArrayList<>();
 
 
         if(userCart.isPresent()){
@@ -85,9 +91,47 @@ public class CheckoutServiceImpl implements CheckoutService {
             transactionDetail.setTransaction(newTransaction);
 
             transactionDetailRepository.save(transactionDetail);
+
+            TransactionDetailResponse detailResponse = new TransactionDetailResponse(
+                    cartItem.getMenu().getMenuTitle(),
+                    cartItem.getQuantity(),
+                    cartItem.getMenu().getPrice(),
+                    cartItem.getMenu().getPrice() * cartItem.getQuantity()
+            );
+
+            responses.add(detailResponse);
         }
 
        cartItemRepository.deleteAll(cartItems);
+
+        String phoneNumber = saveTransaction.getBranch().getPhoneNumber();
+
+        List<TransactionDetail> details =  transactionDetailRepository.findByTransaction(saveTransaction);
+
+        String message =
+                "Halo Cerita Bakmi \n\n" +
+                "Saya ingin melakukan pemesanan. \n\n" +
+                "atas nama: " + saveTransaction.getUser().getUsername() + "\n"+
+                "No. Transaksi: #" + saveTransaction.getTransactionId() + "\n\n" +
+                "Pesanan:\n";
+
+        for(TransactionDetail transactionDetail : details){
+
+            message += "-"
+                    + transactionDetail.getMenu().getMenuTitle()
+                    + " x"
+                    + transactionDetail.getQuantity()
+                    + " =Rp " +transactionDetail.getSubtotal()
+                    + "\n";
+        }
+        message +=
+                "\nTotal : Rp" + saveTransaction.getTotalAmount() +
+                "\nAlamat Pengiriman: " + saveTransaction.getDeliveryAddress() +
+                "\nPembayaran belum termasuk ongkir";
+
+        String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
+
+        String whatsAppUrl = "https://wa.me/" + phoneNumber + "?text=" + encodedMessage;
 
 
         return new CheckoutResponse(
@@ -97,8 +141,57 @@ public class CheckoutServiceImpl implements CheckoutService {
                 saveTransaction.getSubtotal(),
                 saveTransaction.getTotalAmount(),
                 saveTransaction.getPaymentStatus(),
-                saveTransaction.getOrderStatus()
+                saveTransaction.getOrderStatus(),
+                whatsAppUrl,
+                responses
+
 
         );
+    }
+
+    @Override
+    public List<CheckoutResponse> getAllTransaction() {
+        return List.of();
+    }
+
+    @Override
+    public List<CheckoutResponse> getTransactionByUser() throws Exception{
+
+        User currentUser = findAuthenticationUser.getAuthenticatedUser();
+        List<Transaction> userTransaction = transactionRepository.findByUser(currentUser);
+
+       List<CheckoutResponse> responses = new ArrayList<>();
+
+       for(Transaction transaction : userTransaction){
+
+           List<TransactionDetailResponse> details = new ArrayList<>();
+
+           for(TransactionDetail transactionDetail : transaction.getTransactionDetails()){
+               TransactionDetailResponse detailResponse =
+                       new TransactionDetailResponse(
+                               transactionDetail.getMenu().getMenuTitle(),
+                               transactionDetail.getQuantity(),
+                               transactionDetail.getPrice(),
+                               transactionDetail.getSubtotal()
+                       );
+               details.add(detailResponse);
+           }
+
+           CheckoutResponse response = new CheckoutResponse(
+                transaction.getTransactionId(),
+                transaction.getBranch().getBranchName(),
+                transaction.getDeliveryAddress(),
+                transaction.getSubtotal(),
+                transaction.getTotalAmount(),
+                transaction.getPaymentStatus(),
+                transaction.getOrderStatus(),
+                null,
+                details
+           );
+
+           responses.add(response);
+       }
+
+        return responses;
     }
 }
