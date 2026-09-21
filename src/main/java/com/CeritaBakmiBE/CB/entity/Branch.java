@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +29,14 @@ public class Branch {
     @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
     @OneToMany(mappedBy = "branch")
     private List<Transaction> transaction;
+
+    @OneToMany(mappedBy = "branch")
+    private List<User> users;
 
     private boolean isActive = true;
 }

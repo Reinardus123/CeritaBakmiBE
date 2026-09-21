@@ -33,6 +33,7 @@ public class BranchServiceImpl implements BranchService {
         Branch branch = new Branch();
         branch.setBranchName(branchRequest.getBranchName());
         branch.setAddress(branchRequest.getAddress());
+        branch.setPhoneNumber(branchRequest.getPhoneNumber());
 
         Branch saveBranch = branchRepository.save(branch);
 
@@ -40,6 +41,7 @@ public class BranchServiceImpl implements BranchService {
                 saveBranch.getBranchId(),
                 saveBranch.getBranchName(),
                 saveBranch.getAddress(),
+                saveBranch.getPhoneNumber(),
                 saveBranch.isActive()
         );
     }
@@ -65,6 +67,7 @@ public class BranchServiceImpl implements BranchService {
                         branch.getBranchId(),
                         branch.getBranchName(),
                         branch.getAddress(),
+                        branch.getPhoneNumber(),
                         branch.isActive()
                 ))
                 .toList();
@@ -80,14 +83,18 @@ public class BranchServiceImpl implements BranchService {
                                 "cabang tidak ada"
                         ));
         branch.setBranchName(branchRequest.getBranchName());
+        branch.setPhoneNumber(branchRequest.getPhoneNumber());
         branch.setAddress(branchRequest.getAddress());
 
         Branch savebranch = branchRepository.save(branch);
+
+
 
         return new BranchResponse(
                 savebranch.getBranchId(),
                 savebranch.getBranchName(),
                 savebranch.getAddress(),
+                savebranch.getPhoneNumber(),
                 savebranch.isActive()
         );
     }

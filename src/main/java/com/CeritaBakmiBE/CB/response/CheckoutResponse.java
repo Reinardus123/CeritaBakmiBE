@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,4 +29,8 @@ public class CheckoutResponse {
     private PaymentStatus paymentStatus;
 
     private OrderStatus orderStatus;
+
+    private String whatsappUrl;
+
+    private List<TransactionDetailResponse> details;
 }
