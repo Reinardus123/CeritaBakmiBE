@@ -34,4 +34,11 @@ public class CheckoutController {
         return checkoutService.getTransactionByUser();
     }
 
+    @Operation(summary = "Get all transaction by branch", description = "Get all transaction by branch")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "getByBranch")
+    public List<CheckoutResponse> getCheckoutByBranch() throws Exception{
+        return checkoutService.getAllTransactionByBranch();
+    }
+
 }
