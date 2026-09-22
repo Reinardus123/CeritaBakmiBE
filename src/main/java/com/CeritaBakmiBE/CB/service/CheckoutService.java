@@ -9,7 +9,7 @@ import java.util.List;
 public interface CheckoutService {
 
     CheckoutResponse checkout(CheckoutRequest checkoutRequest);
-    List<CheckoutResponse> getAllTransaction();
+    List<CheckoutResponse> getAllTransactionByBranch() throws Exception;
     List<CheckoutResponse> getTransactionByUser() throws Exception;
 
 

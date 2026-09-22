@@ -150,9 +150,53 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     @Override
-    public List<CheckoutResponse> getAllTransaction() {
-        return List.of();
+    public List<CheckoutResponse> getAllTransactionByBranch() throws Exception{
+
+        User currentUser = findAuthenticationUser.getAuthenticatedUser();
+
+        if(!"ADMIN".equals(currentUser.getRole())){
+            throw new Exception("Not Authorized");
+        }
+        Branch branch = currentUser.getBranch();
+
+        List<Transaction> findTransactionByBranch = transactionRepository.findByBranch(branch);
+
+        List<CheckoutResponse> responses = new ArrayList<>();
+
+        for(Transaction transaction : findTransactionByBranch){
+
+            List<TransactionDetailResponse> details = new ArrayList<>();
+
+            for(TransactionDetail transactionDetail : transaction.getTransactionDetails()){
+                TransactionDetailResponse detailResponse =
+                new TransactionDetailResponse(
+                        transactionDetail.getMenu().getMenuTitle(),
+                        transactionDetail.getQuantity(),
+                        transactionDetail.getPrice(),
+                        transactionDetail.getSubtotal()
+                );
+                details.add(detailResponse);
+            }
+
+            CheckoutResponse response = new CheckoutResponse(
+                    transaction.getTransactionId(),
+                    transaction.getBranch().getBranchName(),
+                    transaction.getDeliveryAddress(),
+                    transaction.getSubtotal(),
+                    transaction.getTotalAmount(),
+                    transaction.getPaymentStatus(),
+                    transaction.getOrderStatus(),
+                    null,
+                    details
+            );
+
+            responses.add(response);
+
+
+        }
+        return responses;
     }
+
 
     @Override
     public List<CheckoutResponse> getTransactionByUser() throws Exception{
@@ -194,4 +238,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         return responses;
     }
+
+
+
 }
