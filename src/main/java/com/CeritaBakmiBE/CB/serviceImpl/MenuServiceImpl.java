@@ -108,7 +108,7 @@ public class MenuServiceImpl implements MenuService {
                                 "Menu Not Found"
                         ));
 
-        menu.setActive(false);
+        menu.setActive(!menu.isActive());
         menuRepository.save(menu);
     }
 

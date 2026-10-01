@@ -25,7 +25,7 @@ public class CartController {
     @Operation(summary = "Create cart", description = "add cart")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public CartResponse addCart(@Valid CartRequest cartRequest) throws IOException {
+    public CartResponse addCart(@Valid @RequestBody CartRequest cartRequest) throws IOException {
         return cartService.addCart(cartRequest);
     }
 

@@ -4,6 +4,7 @@ import com.CeritaBakmiBE.CB.repository.UserRepository;
 import io.jsonwebtoken.security.Password;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -99,8 +100,11 @@ public class securityConfig {
                 .authorizeHttpRequests(configurer ->
                         configurer
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**",
-                                "/swagger-resources/**", "/webjars/**" , "/docs").permitAll()
+                                "/swagger-resources/**", "/webjars/**" , "/docs", "/uploads/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/menu/getMenu").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/category/getCat").permitAll()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                         ).addFilterBefore(securityJwtFilter, UsernamePasswordAuthenticationFilter.class);
 
