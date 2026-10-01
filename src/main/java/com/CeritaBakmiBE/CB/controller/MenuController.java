@@ -35,7 +35,7 @@ public class MenuController {
 
     @Operation(summary = "Soft Delete Menu", description = "Delete Menu")
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/updateStatus")
     public ResponseEntity<Void> deleteMenu(@Valid @PathVariable long id){
         menuService.deleteMenu(id);
         return ResponseEntity.noContent().build();
