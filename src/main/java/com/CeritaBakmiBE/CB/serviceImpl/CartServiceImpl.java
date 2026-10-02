@@ -8,6 +8,8 @@ import com.CeritaBakmiBE.CB.repository.CartItemRepository;
 import com.CeritaBakmiBE.CB.repository.CartRepository;
 import com.CeritaBakmiBE.CB.repository.MenuRepository;
 import com.CeritaBakmiBE.CB.request.CartRequest;
+import com.CeritaBakmiBE.CB.request.UpdateOrderStatusRequest;
+import com.CeritaBakmiBE.CB.request.UpdateQuantityRequest;
 import com.CeritaBakmiBE.CB.response.CartResponse;
 import com.CeritaBakmiBE.CB.service.CartService;
 import com.CeritaBakmiBE.CB.util.FindAuthenticationUser;
@@ -133,5 +135,36 @@ public class CartServiceImpl implements CartService {
                         cartItem.getQuantity(),
                         cartItem.getMenu().getPrice() * cartItem.getQuantity()
                 )) .toList();
+    }
+
+    @Override
+    public CartResponse updateQuantity(long cartItemId,  UpdateQuantityRequest request) {
+
+        User currentUser = findAuthenticationUser.getAuthenticatedUser();
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException(("Cart item tidak ditemukan")));
+
+        if(cartItem.getCart().getUser().getId() != currentUser.getId()){
+            throw new RuntimeException("Cart bukan milik user");
+        } else{
+            if(request.getQuantity() > 0){
+               cartItem.setQuantity(request.getQuantity());
+
+            }
+            else {
+                throw new RuntimeException("Quantity harus lebih 0");
+            }
+        }
+
+        cartItemRepository.save(cartItem);
+        return new CartResponse(
+                cartItem.getCartItemId(),
+                cartItem.getMenu().getMenuId(),
+                cartItem.getMenu().getMenuTitle(),
+                cartItem.getMenu().getPrice(),
+                cartItem.getMenu().getImageUrl(),
+                cartItem.getQuantity(),
+                cartItem.getMenu().getPrice() * cartItem.getQuantity()
+        );
     }
 }

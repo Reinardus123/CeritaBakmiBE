@@ -1,6 +1,8 @@
 package com.CeritaBakmiBE.CB.controller;
 
 import com.CeritaBakmiBE.CB.request.CartRequest;
+import com.CeritaBakmiBE.CB.request.UpdateOrderStatusRequest;
+import com.CeritaBakmiBE.CB.request.UpdateQuantityRequest;
 import com.CeritaBakmiBE.CB.response.CartResponse;
 import com.CeritaBakmiBE.CB.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,5 +44,12 @@ public class CartController {
     public ResponseEntity<Void> deleteCartItem(@Valid @PathVariable long id){
         cartService.removeFromCart(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "update quantity", description = "update quantity")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{id}/updateQuantity")
+    public CartResponse updateQuantity( @PathVariable long id, @RequestBody @Valid UpdateQuantityRequest request){
+        return cartService.updateQuantity(id, request);
     }
 }
