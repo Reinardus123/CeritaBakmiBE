@@ -94,8 +94,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
             TransactionDetailResponse detailResponse = new TransactionDetailResponse(
                     cartItem.getMenu().getMenuTitle(),
-                    cartItem.getQuantity(),
                     cartItem.getMenu().getPrice(),
+                    cartItem.getQuantity(),
                     cartItem.getMenu().getPrice() * cartItem.getQuantity()
             );
 
@@ -143,6 +143,8 @@ public class CheckoutServiceImpl implements CheckoutService {
                 saveTransaction.getPaymentStatus(),
                 saveTransaction.getOrderStatus(),
                 whatsAppUrl,
+                saveTransaction.getCreatedAt(),
+                saveTransaction.getUser().getUsername(),
                 responses
 
 
@@ -171,8 +173,8 @@ public class CheckoutServiceImpl implements CheckoutService {
                 TransactionDetailResponse detailResponse =
                 new TransactionDetailResponse(
                         transactionDetail.getMenu().getMenuTitle(),
+                        transactionDetail.getMenu().getPrice(),
                         transactionDetail.getQuantity(),
-                        transactionDetail.getPrice(),
                         transactionDetail.getSubtotal()
                 );
                 details.add(detailResponse);
@@ -187,6 +189,8 @@ public class CheckoutServiceImpl implements CheckoutService {
                     transaction.getPaymentStatus(),
                     transaction.getOrderStatus(),
                     null,
+                    transaction.getCreatedAt(),
+                    transaction.getUser().getUsername(),
                     details
             );
 
@@ -214,8 +218,8 @@ public class CheckoutServiceImpl implements CheckoutService {
                TransactionDetailResponse detailResponse =
                        new TransactionDetailResponse(
                                transactionDetail.getMenu().getMenuTitle(),
+                               transactionDetail.getMenu().getPrice(),
                                transactionDetail.getQuantity(),
-                               transactionDetail.getPrice(),
                                transactionDetail.getSubtotal()
                        );
                details.add(detailResponse);
@@ -230,6 +234,8 @@ public class CheckoutServiceImpl implements CheckoutService {
                 transaction.getPaymentStatus(),
                 transaction.getOrderStatus(),
                 null,
+                transaction.getCreatedAt(),
+                transaction.getUser().getUsername(),
                 details
            );
 

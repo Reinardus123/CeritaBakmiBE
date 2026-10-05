@@ -41,7 +41,6 @@ public class UpdatePaymentStatusImpl implements UpdatePaymentStatus {
         if(!"ADMIN".equals(currentUser.getRole())){
             throw new Exception("Not Authorized");
         }
-
         if(transaction.getBranch().getBranchId() == currentUser.getBranch().getBranchId()){
             transaction.setPaymentStatus(paymentStatus);
         } else{
