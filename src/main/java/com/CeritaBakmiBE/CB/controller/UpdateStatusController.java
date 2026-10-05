@@ -27,7 +27,7 @@ public class UpdateStatusController {
         return ResponseEntity.ok("Payment status diubah");
     }
 
-    @Operation(summary = "Update Payment Status", description = "Update Payment Status")
+    @Operation(summary = "Update Order Status", description = "Update Payment Status")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}/updateOrderStatus")
     public ResponseEntity<String> updateOrderStatus(@Valid @PathVariable long id, @RequestBody UpdateOrderStatusRequest updateOrderStatusRequest) throws Exception{

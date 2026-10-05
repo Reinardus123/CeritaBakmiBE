@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -31,6 +33,10 @@ public class CheckoutResponse {
     private OrderStatus orderStatus;
 
     private String whatsappUrl;
+
+    private LocalDateTime createdAt;
+
+    private String username;
 
     private List<TransactionDetailResponse> details;
 }

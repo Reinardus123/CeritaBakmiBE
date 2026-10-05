@@ -23,7 +23,7 @@ public class CheckoutController {
     @Operation(summary = "Checkout menu", description = "Checkout menu")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/item")
-    public CheckoutResponse checkout(@Valid CheckoutRequest checkoutRequest){
+    public CheckoutResponse checkout(@Valid @RequestBody CheckoutRequest checkoutRequest){
         return checkoutService.checkout(checkoutRequest);
     }
 
