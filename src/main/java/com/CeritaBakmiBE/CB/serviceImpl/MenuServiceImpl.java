@@ -6,6 +6,7 @@ import com.CeritaBakmiBE.CB.repository.MenuRepository;
 import com.CeritaBakmiBE.CB.request.MenuRequest;
 import com.CeritaBakmiBE.CB.response.MenuResponse;
 import com.CeritaBakmiBE.CB.service.MenuService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,35 +22,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository ;
     private final CategoryRepository categoryRepository;
+    private final SupabaseStorageService supabaseStorageService;
 
-    public MenuServiceImpl(MenuRepository menuRepository, CategoryRepository categoryRepository) {
-        this.menuRepository = menuRepository;
-        this.categoryRepository = categoryRepository;
-    }
-
-    private String saveImage(MultipartFile image) throws IOException {
-        String fileName = UUID.randomUUID()
-                + "_"
-                +image.getOriginalFilename();
-        Path uploadPath = Paths.get("uploads");
-
-        if(!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        Path filePath = uploadPath.resolve(fileName);
-        Files.copy(
-                image.getInputStream(),
-                filePath,
-                StandardCopyOption.REPLACE_EXISTING
-        );
-
-        return "/uploads/" + fileName;
-    }
 
     @Override
     @Transactional
@@ -75,7 +54,11 @@ public class MenuServiceImpl implements MenuService {
                 .orElseThrow(() -> new RuntimeException("Category tidak ditemukan"));
 
         MultipartFile image = menuRequest.getImage();
-        String imageUrl = saveImage(image);
+        String imageUrl = null;
+
+        if(image != null && !image.isEmpty()){
+            imageUrl = supabaseStorageService.upload(image);
+        }
 
         Menu menu = new Menu();
         menu.setMenuTitle(menuRequest.getMenuTitle());
@@ -146,7 +129,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setPrice(menuRequest.getPrice());
         menu.setCategory(category);
         if(menuRequest.getImage() != null && !menuRequest.getImage().isEmpty()){
-            String imageUrl = saveImage(menuRequest.getImage());
+            String imageUrl = supabaseStorageService.upload(menuRequest.getImage());
             menu.setImageUrl(imageUrl);
         }
 
