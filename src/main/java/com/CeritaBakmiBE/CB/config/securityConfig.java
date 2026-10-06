@@ -68,7 +68,9 @@ public class securityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
+                List.of(
+                        "http://localhost:5173",
+                        "https://cerita-bakmi-fe-rcgl.vercel.app" )
         );
 
         configuration.setAllowedMethods(
