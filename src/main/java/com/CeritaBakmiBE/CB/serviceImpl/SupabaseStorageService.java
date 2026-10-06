@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+
 public class SupabaseStorageService {
 
     @Value("${supabase.url}")
@@ -20,6 +20,10 @@ public class SupabaseStorageService {
     private String serviceRoleKey;
 
     private final RestClient restClient;
+
+    public SupabaseStorageService(RestClient.Builder builder) {
+        this.restClient = builder.build();
+    }
 
     public String upload(MultipartFile image) throws IOException{
 
