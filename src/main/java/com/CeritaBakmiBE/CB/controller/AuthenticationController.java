@@ -2,8 +2,10 @@ package com.CeritaBakmiBE.CB.controller;
 
 
 import com.CeritaBakmiBE.CB.request.AuthRequest;
+import com.CeritaBakmiBE.CB.request.CustomerRequest;
 import com.CeritaBakmiBE.CB.request.UserRequest;
 import com.CeritaBakmiBE.CB.response.AuthResponse;
+import com.CeritaBakmiBE.CB.response.CustomerResponse;
 import com.CeritaBakmiBE.CB.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,5 +36,12 @@ public class AuthenticationController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody AuthRequest authRequest){
         return authenticationService.login(authRequest);
+    }
+
+    @Operation(summary = "Guest Customer", description = "Guest Customer")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("/guestUser")
+    public CustomerResponse guestCustomer(@Valid @RequestBody CustomerRequest request){
+        return authenticationService.guestUser(request);
     }
 }

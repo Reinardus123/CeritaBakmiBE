@@ -44,6 +44,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    private String custName;
+
+    private String phoneNumber;
+
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;

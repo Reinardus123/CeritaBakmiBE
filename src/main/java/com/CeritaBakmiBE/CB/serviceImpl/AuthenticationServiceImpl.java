@@ -3,8 +3,10 @@ package com.CeritaBakmiBE.CB.serviceImpl;
 import com.CeritaBakmiBE.CB.entity.User;
 import com.CeritaBakmiBE.CB.repository.UserRepository;
 import com.CeritaBakmiBE.CB.request.AuthRequest;
+import com.CeritaBakmiBE.CB.request.CustomerRequest;
 import com.CeritaBakmiBE.CB.request.UserRequest;
 import com.CeritaBakmiBE.CB.response.AuthResponse;
+import com.CeritaBakmiBE.CB.response.CustomerResponse;
 import com.CeritaBakmiBE.CB.service.AuthenticationService;
 import com.CeritaBakmiBE.CB.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -51,7 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setEmail(input.getEmail());
         user.setUsername(input.getUsername());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
-        user.setRole("CUSTOMER");
+        user.setRole("ADMIN");
         return user;
     }
 
@@ -68,7 +73,50 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new AuthResponse(jwtToken);
     }
 
+    @Override
+    public CustomerResponse guestUser(CustomerRequest request) {
 
+        Optional<User> UserByPhoneNumber = userRepository.findByPhoneNumber(request.getPhoneNumber());
+        if(UserByPhoneNumber.isPresent()){
+            if(UserByPhoneNumber.get().getRole().equals("CUSTOMER")){
+                User user = UserByPhoneNumber.get();
+
+
+                Map<String, Object> claims = new HashMap<>();
+                claims.put("role",user.getRole());
+                String jwtToken = jwtService.generateToken(claims, user);
+
+                return new CustomerResponse(jwtToken);
+
+            } else{
+                throw new RuntimeException("Tidak Terautorisasi");
+            }
+        } else{
+
+            User user = buildGuestCustomer(request);
+            userRepository.save(user);
+
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role",user.getRole());
+            String jwtToken = jwtService.generateToken(claims, user);
+
+            return new CustomerResponse(jwtToken);
+        }
+    }
+
+    private User buildGuestCustomer(CustomerRequest request){
+
+        String randomPassword = UUID.randomUUID().toString();
+
+        User user = new User();
+        user.setCustName(request.getName());
+        user.setUsername(request.getPhoneNumber());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setRole("CUSTOMER");
+        user.setEmail(request.getPhoneNumber() + "@gmail.com");
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        return user;
+    }
 
 
 }

@@ -102,8 +102,31 @@ public class securityConfig {
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**" , "/docs", "/uploads/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/menu/getMenu").permitAll()
+
+                                .requestMatchers(HttpMethod.PUT, "/api/menu/{id}/updateStatus").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/menu/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/menu/createMenu").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/menu/update/{id}").hasRole("ADMIN")
+
                                 .requestMatchers(HttpMethod.GET, "/api/category/getCat").permitAll()
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/category/createCat").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/category/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/category/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/category/category/{id}").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/api/auth/login").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/auth/register").hasRole("ADMIN")
+
+
+                                .requestMatchers(HttpMethod.POST, "/api/branch/createbranch").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/branch/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/api/branch/update/{id}").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.PUT, "/api/updateStatus/{id}/updatePaymentStatus").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/updateStatus/{id}/updateOrderStatus").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/api/checkout/getByBranch").hasRole("ADMIN")
+
 
                         .anyRequest().authenticated()
                         ).addFilterBefore(securityJwtFilter, UsernamePasswordAuthenticationFilter.class);
