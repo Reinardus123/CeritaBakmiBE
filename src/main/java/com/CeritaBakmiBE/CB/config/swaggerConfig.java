@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
         security = @SecurityRequirement(name= "bearerAuth"),
         servers = {
                 @Server(
-                        url = "https://cerita-bakmi-be.vercel.app/api"
+                        url = "https://cerita-bakmi-be.vercel.app"
                 )
         }
 )
