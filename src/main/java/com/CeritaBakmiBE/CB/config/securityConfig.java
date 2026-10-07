@@ -70,7 +70,9 @@ public class securityConfig {
         configuration.setAllowedOrigins(
                 List.of(
                         "http://localhost:5173",
-                        "https://cerita-bakmi-fe-rcgl.vercel.app" )
+                        "https://cerita-bakmi-fe-rcgl.vercel.app",
+                        "https://cerita-bakmi-be.vercel.app"
+                        )
         );
 
         configuration.setAllowedMethods(
