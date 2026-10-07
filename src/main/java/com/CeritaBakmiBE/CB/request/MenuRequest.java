@@ -29,6 +29,6 @@ public class MenuRequest {
     @NotNull(message = "Category harus dipilih")
     private Long categoryId;
 
-    private MultipartFile image;
+    private String imageUrl;
 
 }

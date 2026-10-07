@@ -1,12 +1,9 @@
 package com.CeritaBakmiBE.CB.serviceImpl;
 
-import lombok.AllArgsConstructor;
+import com.CeritaBakmiBE.CB.response.SignedUploadResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -24,35 +21,54 @@ public class SupabaseStorageService {
         this.restClient = RestClient.create();
     }
 
-    public String upload(MultipartFile image) throws IOException{
 
-        String fileName = UUID.randomUUID()
-                + "_"
-                +image.getOriginalFilename();
+    public SignedUploadResponse createSignedUploadUrl(String fileName){
 
         String bucketName = "menu-images";
 
-        String url = supaBaseUrl
-                + "/storage/v1/object/"
-                +bucketName
-                +"/"
-                +fileName;
+        String path = UUID.randomUUID() + "_" + fileName;
 
-        restClient.post()
+        String url = supaBaseUrl
+                + "/storage/v1/object/upload/sign/"
+                + bucketName
+                + "/"
+                + path;
+
+        String response = restClient.post()
                 .uri(url)
                 .header("Authorization", "Bearer " + serviceRoleKey)
-                .header("apikey", serviceRoleKey)
-                .header("Content-Type", image.getContentType())
-                .body(image.getBytes())
+                .header("apikey",serviceRoleKey)
                 .retrieve()
-                .toBodilessEntity();
+                .body(String.class);
 
-        return supaBaseUrl
-                + "/storage/v1/object/public/"
-                +bucketName
-                + "/"
-                + fileName;
+        return new SignedUploadResponse(
+                path,
+                extractToken(response)
+        );
     }
+
+    private String extractToken(String response){
+
+        int tokenIndex = response.indexOf("token=");
+
+        if(tokenIndex == -1){
+            throw new RuntimeException("Token tidak ditemukan di supabase");
+        }
+
+        String token = response.substring(tokenIndex + 6);
+
+        int endIndex = token.indexOf("\"");
+
+        if(endIndex != -1){
+            token = token.substring(0, endIndex);
+        }
+
+        return token;
+    }
+
+
+
+
 
 
 }

@@ -54,19 +54,13 @@ public class MenuServiceImpl implements MenuService {
         Category category = categoryRepository.findById(menuRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category tidak ditemukan"));
 
-        MultipartFile image = menuRequest.getImage();
-        String imageUrl = null;
-
-        if(image != null && !image.isEmpty()){
-            imageUrl = supabaseStorageService.upload(image);
-        }
 
         Menu menu = new Menu();
         menu.setMenuTitle(menuRequest.getMenuTitle());
         menu.setDescription(menuRequest.getDescription());
         menu.setPrice(menuRequest.getPrice());
         menu.setCategory(category);
-        menu.setImageUrl(imageUrl);
+        menu.setImageUrl(menuRequest.getImageUrl());
 
         Menu saveMenu = menuRepository.save(menu);
 
@@ -129,11 +123,10 @@ public class MenuServiceImpl implements MenuService {
         menu.setDescription(menuRequest.getDescription());
         menu.setPrice(menuRequest.getPrice());
         menu.setCategory(category);
-        if(menuRequest.getImage() != null && !menuRequest.getImage().isEmpty()){
-            String imageUrl = supabaseStorageService.upload(menuRequest.getImage());
-            menu.setImageUrl(imageUrl);
-        }
 
+        if(menuRequest.getImageUrl() != null && !menuRequest.getImageUrl().isBlank()){
+            menu.setImageUrl(menuRequest.getImageUrl());
+        }
         Menu saveMenu = menuRepository.save(menu);
         return new MenuResponse(
                 saveMenu.getMenuId(),
